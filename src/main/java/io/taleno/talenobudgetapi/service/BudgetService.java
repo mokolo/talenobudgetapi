@@ -9,4 +9,6 @@ public interface BudgetService  {
     public BudgetDto save(BudgetDto budgetDto);
     public BudgetDto getOne (Long id);
     public BudgetsUserDto getBudgetsForOneUser(Long id);
+    public BudgetsUserDto getBudgetsForOneUserv2(Long id);
+
 }

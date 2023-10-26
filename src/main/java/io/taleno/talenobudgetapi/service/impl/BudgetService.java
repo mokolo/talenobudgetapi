@@ -11,6 +11,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -23,7 +24,7 @@ public class BudgetService implements io.taleno.talenobudgetapi.service.BudgetSe
     private BudgetRepository budgetRepository;
     private ModelMapper modelMapper;
     private RestTemplate restTemplate;
-
+    private WebClient webClient;
     @Override
     public BudgetDto save(BudgetDto budgetDto) {
         Budget budget = modelMapper.map(budgetDto, Budget.class);
@@ -48,4 +49,18 @@ public class BudgetService implements io.taleno.talenobudgetapi.service.BudgetSe
         BudgetsUserDto budgetsUserDto = new BudgetsUserDto(budgetDtos,userDto);
         return budgetsUserDto;
     }
+
+    public BudgetsUserDto getBudgetsForOneUserv2(Long userId){
+        List<Budget> budgets = budgetRepository.findByUserId(userId);
+        List<BudgetDto> budgetDtos= budgets.stream()
+                .map(budget -> modelMapper.map(budget, BudgetDto.class))
+                .collect(Collectors.toList());
+        UserDto userDto = webClient.get().uri("http://localhost:8081/api/users/" + userId)
+                .retrieve().
+                bodyToMono(UserDto.class).
+                block();
+        BudgetsUserDto budgetsUserDto = new BudgetsUserDto(budgetDtos,userDto);
+        return budgetsUserDto;
+    }
+
 }
