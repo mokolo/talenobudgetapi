@@ -40,4 +40,11 @@ public class BudgetController {
         BudgetsUserDto budgetsUserDto =   budgetService.getBudgetsForOneUserv2(userId);
         return  new ResponseEntity<>(budgetsUserDto, HttpStatus.OK);
     }
+
+    @GetMapping("bugdetsbyuser/v3/{userId}")
+    public ResponseEntity<BudgetsUserDto> budgetsUserv3(@PathVariable("userId") Long userId){
+        BudgetsUserDto budgetsUserDto =   budgetService.getBudgetsForOneUserv3(userId);
+        return  new ResponseEntity<>(budgetsUserDto, HttpStatus.OK);
+    }
+
 }
